@@ -12,14 +12,19 @@ var (
 
 func init() {
 
+	// load DBMS params
 	pgHost = os.Getenv("PG_HOST")
 	pgDB = os.Getenv("PG_DB")
 	pgUser = os.Getenv("PG_USER")
 	pgPassword = os.Getenv("PG_PASSWORD")
 
+	// load service params
+	svcPort = os.Getenv("SVC_PORT")
+	svcUser = os.Getenv("PG_USER")
+	svcPassword = os.Getenv("PG_PASSWORD")
+
 }
 
-// ConnectSting construct database connection string
-func ConnectSting() string {
+func dbConnectSting() string {
 	return fmt.Sprintf("postgres://%s:%s@%s/%s)", pgUser, pgPassword, pgHost, pgDB)
 }

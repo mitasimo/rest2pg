@@ -25,6 +25,7 @@ func main() {
 	}
 	defer db.Close()
 
+	// create http server
 	server := http.Server{
 		Addr:        ":8899",
 		Handler:     &Service{db},
@@ -32,9 +33,11 @@ func main() {
 		//WriteTimeout: 10 * time.Second,
 	}
 
+	// os signals
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
+	// process os signals
 	go func() {
 		<-sigs
 		server.Shutdown(context.Background())
