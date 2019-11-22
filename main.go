@@ -56,13 +56,7 @@ type Service struct {
 func (svc *Service) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
-	// check http method
-	if r.Method != http.MethodPost {
-		http.Error(w, "Only post method", http.StatusBadRequest)
-		return
-	}
-
-	// auth
+	// check auth
 	usr, pass, ok := r.BasicAuth()
 	if !ok {
 		http.Error(w, errAuth, http.StatusUnauthorized)
@@ -70,6 +64,12 @@ func (svc *Service) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	if usr != svcUser || pass != svcPassword {
 		http.Error(w, errAuth, http.StatusUnauthorized)
+		return
+	}
+
+	// check http method
+	if r.Method != http.MethodPost {
+		http.Error(w, "Only post method", http.StatusBadRequest)
 		return
 	}
 
