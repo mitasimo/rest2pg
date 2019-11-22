@@ -24,8 +24,8 @@ func init() {
 
 	// load service params
 	svcPort = os.Getenv("SVC_PORT")
-	svcUser = os.Getenv("PG_USER")
-	svcPassword = os.Getenv("PG_PASSWORD")
+	svcUser = os.Getenv("SVC_USER")
+	svcPassword = os.Getenv("SVC_PASSWORD")
 
 }
 
