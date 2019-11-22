@@ -5,6 +5,10 @@ import (
 	"os"
 )
 
+const (
+	errAuth = "wrong user name or password"
+)
+
 var (
 	pgHost, pgDB, pgUser, pgPassword string
 	svcPort, svcUser, svcPassword    string

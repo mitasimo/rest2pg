@@ -27,7 +27,7 @@ func main() {
 
 	// create http server
 	server := http.Server{
-		Addr:        ":8899",
+		Addr:        svcPort,
 		Handler:     &Service{db},
 		ReadTimeout: 10 * time.Second,
 		//WriteTimeout: 10 * time.Second,
@@ -56,17 +56,31 @@ type Service struct {
 func (svc *Service) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
+	// check http method
 	if r.Method != http.MethodPost {
 		http.Error(w, "Only post method", http.StatusBadRequest)
 		return
 	}
 
+	// auth
+	usr, pass, ok := r.BasicAuth()
+	if !ok {
+		http.Error(w, errAuth, http.StatusUnauthorized)
+		return
+	}
+	if usr != svcUser || pass != svcPassword {
+		http.Error(w, errAuth, http.StatusUnauthorized)
+		return
+	}
+
+	// read sql query from http request's body
 	sqlQuery, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	// execute http query
 	res, err := svc.ExecContext(r.Context(), string(sqlQuery))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
